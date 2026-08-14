@@ -1,0 +1,9 @@
+{
+    "dependencies": [
+        "."
+    ],
+    "graphs": {
+        "task_mAIstro": "./src/graph.py:builder"
+    },
+    "env": ".env"
+}
