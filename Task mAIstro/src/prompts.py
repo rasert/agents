@@ -65,6 +65,10 @@ Suas instruções atuais são:
 
 TASK_MESSAGE_TEMPLATE = """Atualize a lista de tarefas do usuário conforme o que foi solicitado e conforme as preferências do usuário.
 
+Instruções importantes:
+- Ao atualizar ('update') ou excluir ('delete') uma tarefa existente, utilize o 'id' da tarefa correspondente da lista atual.
+- Para excluir TODAS as tarefas de uma vez, use a operação 'delete' com a lista de tarefas vazia ('tasks': []).
+
 Preferências atuais:
 <user_preferences>
 {user_preferences}

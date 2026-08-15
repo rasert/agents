@@ -1,5 +1,5 @@
 from typing import Annotated, Literal, TypedDict
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 from langgraph.graph import MessagesState
 from pydantic import BaseModel, Field
@@ -8,9 +8,9 @@ from pydantic import BaseModel, Field
 class Task(BaseModel, extra="allow"):
     """Tarefa do usuário com suporte a campos adicionais dinâmicos."""
 
-    id: UUID = Field(
-        default_factory=uuid4,
-        description="Identificador único universal da tarefa.",
+    id: str = Field(
+        default_factory=lambda: str(uuid4()),
+        description="Identificador único da tarefa.",
     )
     description: str = Field(description="Descrição da tarefa.")
 
@@ -29,17 +29,22 @@ def reduce_tasks(
     new_tasks = list(current_tasks) if current_tasks else []
 
     for item in updates:
-        op = item.op
+        op = getattr(item, "op", None)
+        tasks_item = getattr(item, "tasks", [])
 
-        for task_data in item.tasks:
-            if op == "add":
-                new_tasks.append(task_data)
-            elif op == "update":
-                new_tasks = [
-                    t if t.id != task_data.id else task_data for t in new_tasks
-                ]
-            elif op == "delete":
-                new_tasks = [t for t in new_tasks if t.id != task_data.id]
+        if op == "delete" and not tasks_item:
+            new_tasks = []
+        elif op == "delete":
+            delete_ids = {getattr(t, "id", None) for t in tasks_item}
+            new_tasks = [t for t in new_tasks if t.id not in delete_ids]
+        elif op in ("add", "update"):
+            for task_data in tasks_item:
+                if any(t.id == task_data.id for t in new_tasks):
+                    new_tasks = [
+                        t if t.id != task_data.id else task_data for t in new_tasks
+                    ]
+                else:
+                    new_tasks.append(task_data)
 
     return new_tasks
 
