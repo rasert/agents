@@ -41,7 +41,11 @@ O projeto utiliza um conjunto de ferramentas de última geração para alta perf
 - **Objetivo:** Construir um agente conversacional capaz de manter e atualizar dinamicamente o perfil do usuário, lista de tarefas e preferências de manipulação através de um grafo de estados (`StateGraph`).
 - **Principais Funcionalidades:**
   - Código modularizado em `src/` (`state.py`, `nodes.py`, `prompts.py`, `config.py`, `graph.py`).
-  - Reducer customizado para operações de `add`, `update` e `delete` em listas de tarefas estruturadas via Pydantic.
+  - **Memória de Longo Prazo (Cross-Thread Long-Term Memory):** Integração com **LangGraph `Store`** (`BaseStore`) para persistência entre diferentes sessões e conversas, isolado por `user_id`.
+  - **Hidratação & Persistência Inteligente:**
+    - Carregamento inicial automático (`load_data`) dos dados da `Store` para o `AgentState` no início da interação.
+    - Persistência imediata (*write-through*) via `store.put()` sempre que perfil, preferências ou tarefas são atualizados.
+  - Reducer customizado (`reduce_tasks`) reutilizado tanto no `AgentState` quanto no cálculo da lista atualizada para gravação na `Store`.
   - Roteamento condicional de mensagens (`message_router`) baseado na chamada de ferramentas do LLM.
   - Execução interativa e visual via **LangGraph Studio** (`langgraph dev`) e testes síncronos via Jupyter Notebook.
 
