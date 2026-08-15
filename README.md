@@ -13,12 +13,16 @@ Este repositório funciona como um portfólio prático e diário de aprendizado.
 
 ---
 
-## 🛠️ Tecnologias & Ferramentas
+## 🛠️ Tecnologias & Ferramentas Modernas (Rust-Powered DX)
+
+O projeto utiliza um conjunto de ferramentas de última geração para alta performance e excelente **Developer Experience (DX)**:
 
 - **Linguagem Principal:** Python 3.12+
-- **Frameworks de IA & Agentes:** LangGraph, LangChain, Ollama
-- **Modelagem & Dados:** Pydantic, NumPy, Pandas, Scikit-Learn, PyTorch *(em expansão)*
-- **Ambiente de Desenvolvimento:** Jupyter Notebook, `uv`, `pip`, Virtualenv
+- **Frameworks de IA & Agentes:** LangGraph, LangChain, Ollama, LangGraph Studio / Server
+- **Validação de Dados:** **Pydantic v2** (com motor `pydantic-core` em Rust)
+- **Gerenciador de Pacotes & Venv:** **`uv`** (Gerenciamento de dependências ultrarrápido em Rust)
+- **Formatador & Linter:** **`Ruff`** (Linter e formatador PEP8 instantâneo em Rust)
+- **Checagem de Tipos (Type Checking):** **`Pyrefly`** (Language Server estrito para verificação estática de tipos)
 
 ---
 
@@ -26,19 +30,20 @@ Este repositório funciona como um portfólio prático e diário de aprendizado.
 
 | Projeto | Descrição | Tecnologias Chave | Status |
 | :--- | :--- | :--- | :---: |
-| 🎯 [Task mAIstro](./Task%20mAIstro/) | Agente inteligente para gestão dinâmica de tarefas (*ToDo List*) com suporte a memória de longo prazo (perfil, tarefas e preferências) e ferramentas de atualização de estado. | LangGraph, LangChain Ollama, Pydantic, Jupyter | 🟢 Concluído |
+| 🎯 [Task mAIstro](./Task%20mAIstro/) | Agente inteligente para gestão dinâmica de tarefas (*ToDo List*) com suporte a memória de longo prazo (perfil, tarefas e preferências), interface visual via LangGraph Studio e arquitetura modular em Python. | LangGraph, LangChain Ollama, Pydantic, LangGraph Studio, Jupyter | 🟢 Concluído |
 
 ---
 
 ## 🔍 Detalhes dos Projetos
 
 ### 1. Task mAIstro
-- **Local:** [`/Task mAIstro/task_mAIstro.ipynb`](./Task%20mAIstro/task_mAIstro.ipynb)
+- **Local:** [`/Task mAIstro/`](./Task%20mAIstro/)
 - **Objetivo:** Construir um agente conversacional capaz de manter e atualizar dinamicamente o perfil do usuário, lista de tarefas e preferências de manipulação através de um grafo de estados (`StateGraph`).
 - **Principais Funcionalidades:**
+  - Código modularizado em `src/` (`state.py`, `nodes.py`, `prompts.py`, `config.py`, `graph.py`).
   - Reducer customizado para operações de `add`, `update` e `delete` em listas de tarefas estruturadas via Pydantic.
   - Roteamento condicional de mensagens (`message_router`) baseado na chamada de ferramentas do LLM.
-  - Execução local com LLMs abertos através do `ChatOllama`.
+  - Execução interativa e visual via **LangGraph Studio** (`langgraph dev`) e testes síncronos via Jupyter Notebook.
 
 ---
 
@@ -50,23 +55,20 @@ Este repositório funciona como um portfólio prático e diário de aprendizado.
    cd agents
    ```
 
-2. **Criar e ativar um ambiente virtual:**
+2. **Instalar dependências e ambiente virtual com `uv` (Recomendado):**
    ```bash
-   python3 -m venv .venv
+   uv sync
+   ```
+
+3. **Rodar o LangGraph Studio (Interface Visual Interativa):**
+   ```bash
+   cd "Task mAIstro"
+   langgraph dev
+   ```
+
+4. **Ou executar via Jupyter Notebook:**
+   ```bash
    source .venv/bin/activate
-   ```
-
-3. **Instalar as dependências:**
-   ```bash
-   # Utilizando uv (recomendado por velocidade):
-   uv pip install langgraph langchain-ollama langchain-core pydantic ipykernel grandalf
-
-   # Ou utilizando pip convencional:
-   pip install langgraph langchain-ollama langchain-core pydantic ipykernel grandalf
-   ```
-
-4. **Executar o Jupyter Notebook:**
-   ```bash
    jupyter notebook
    ```
 
