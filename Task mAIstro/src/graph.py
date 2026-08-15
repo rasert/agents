@@ -1,14 +1,13 @@
-from langgraph.graph import StateGraph
 from langgraph.constants import START
-
-from src.state import AgentState
+from langgraph.graph import StateGraph
 from src.nodes import (
-    task_mAIstro,
-    handle_profile,
     handle_preferences,
+    handle_profile,
     handle_tasks,
     message_router,
+    task_mAIstro,
 )
+from src.state import AgentState
 
 builder = StateGraph(AgentState)
 

@@ -1,15 +1,15 @@
 from typing import Literal
+
 from langchain_core.messages import AIMessage, SystemMessage, ToolMessage
 from langgraph.constants import END
-
 from src.config import llm
-from src.state import AgentState, Profile, Preferences, UpdateMemory, TaskUpdatePayload
 from src.prompts import (
-    SYSTEM_MESSAGE_TEMPLATE,
-    PROFILE_MESSAGE_TEMPLATE,
     PREFERENCE_MESSAGE_TEMPLATE,
+    PROFILE_MESSAGE_TEMPLATE,
+    SYSTEM_MESSAGE_TEMPLATE,
     TASK_MESSAGE_TEMPLATE,
 )
+from src.state import AgentState, Preferences, Profile, TaskUpdatePayload, UpdateMemory
 
 
 def task_mAIstro(state: AgentState) -> dict:
@@ -23,9 +23,8 @@ def task_mAIstro(state: AgentState) -> dict:
         user_preferences=user_preferences,
     )
 
-    response = (
-        llm.bind_tools([UpdateMemory])
-        .invoke([SystemMessage(content=system_msg)] + state["messages"])
+    response = llm.bind_tools([UpdateMemory]).invoke(
+        [SystemMessage(content=system_msg)] + state["messages"]
     )
 
     return {"messages": [response]}
@@ -121,8 +120,8 @@ def handle_tasks(state: AgentState) -> dict:
         and not (isinstance(m, AIMessage) and m.tool_calls)
     ]
 
-    task_update_payload = llm.with_structured_output(
-        schema=TaskUpdatePayload
-    ).invoke([SystemMessage(content=task_msg)] + conversation_messages)
+    task_update_payload = llm.with_structured_output(schema=TaskUpdatePayload).invoke(
+        [SystemMessage(content=task_msg)] + conversation_messages
+    )
 
     return {"tasks": [task_update_payload], "messages": [tool_message]}

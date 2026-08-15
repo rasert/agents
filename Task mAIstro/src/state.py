@@ -1,7 +1,8 @@
+from typing import Annotated, Literal, TypedDict
 from uuid import UUID, uuid4
-from typing import Annotated, TypedDict, Literal
-from pydantic import BaseModel, Field
+
 from langgraph.graph import MessagesState
+from pydantic import BaseModel, Field
 
 
 class Task(BaseModel, extra="allow"):
